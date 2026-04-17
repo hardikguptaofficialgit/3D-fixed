@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klyperix Toolkit Unlocked</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #050E07;
+            color: #E0DBC5;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Ambient background glow */
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(87, 193, 111, 0.08) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Gift Box Styles */
+        .gift-box-wrapper {
+            animation: float 3.5s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0) rotate(-1deg); }
+            20%, 80% { transform: translate3d(4px, 0, 0) rotate(2deg); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(6px, 0, 0) rotate(2deg); }
+        }
+        
+        .open-lid {
+            transform: translateY(-120px) rotate(-25deg) scale(1.1) !important;
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .open-body {
+            transform: translateY(40px) scale(0.9);
+            opacity: 0;
+            transition: all 0.7s ease-in;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            z-index: 40;
+            pointer-events: none;
+        }
+
+        /* Premium cinematic styling for content */
+        .glass-panel {
+            background: rgba(18, 36, 24, 0.4);
+            border: 1px solid rgba(87, 193, 111, 0.2);
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(224, 219, 197, 0.1), 0 10px 40px rgba(0,0,0,0.5);
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.7), 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+        
+        /* Grid reveal animation */
+        .stagger-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .stagger-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="ambient-glow"></div>
+
+    <!-- Intro: The Gift Wrap -->
+    <div id="intro-screen" class="absolute inset-0 flex flex-col items-center justify-center z-50 bg-[#0A160D] transition-all duration-1000 ease-in-out">
+        <div class="gift-box-wrapper relative cursor-pointer group" onclick="openGift()">
+            
+            <!-- Glow behind box -->
+            <div class="absolute inset-0 bg-[#D4AF37] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-full"></div>
+
+            <div class="gift-box relative z-10 w-48 h-48 mx-auto mt-12 flex flex-col items-center">
+                
+                <!-- Lid -->
+                <div class="box-lid w-56 h-14 bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] absolute top-[-10px] left-1/2 -translate-x-1/2 rounded shadow-2xl z-20 border border-[#D4AF37]/50" style="transition: transform 0.3s ease;">
+                    <!-- Vertical ribbon -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-full bg-gradient-to-b from-[#FFF0A8] via-[#D4AF37] to-[#B8860B] shadow-inner"></div>
+                    <!-- Bow Knots -->
+                    <div class="absolute -top-12 left-1/2 -translate-x-1/2 flex items-end">
+                        <div class="w-12 h-14 border-[6px] border-[#D4AF37] rounded-[50%_50%_0_50%] origin-bottom-right rotate-[-20deg] shadow-lg bg-gradient-to-br from-[#FFD700] to-[#B8860B]"></div>
+                        <div class="w-12 h-14 border-[6px] border-[#D4AF37] rounded-[50%_50%_50%_0] origin-bottom-left rotate-[20deg] shadow-lg bg-gradient-to-bl from-[#FFD700] to-[#B8860B]"></div>
+                        <div class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-br from-[#FFF8D6] to-[#D4AF37] rounded-full shadow-md z-30"></div>
+                    </div>
+                </div>
+
+                <!-- Box Base -->
+                <div class="box-body w-48 h-40 bg-gradient-to-br from-[#1f1f1f] to-[#050505] rounded-b-md shadow-2xl relative mt-4 overflow-hidden border border-[#D4AF37]/30">
+                    <!-- Vertical ribbon -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-full bg-gradient-to-b from-[#D4AF37] to-[#8B6508] shadow-inner"></div>
+                    <!-- Horizontal ribbon -->
+                    <div class="absolute top-1/2 left-0 -translate-y-1/2 w-full h-8 bg-gradient-to-r from-[#D4AF37] to-[#8B6508] shadow-inner"></div>
+                </div>
+            </div>
+            
+            <p class="text-center mt-16 text-[#D4AF37] tracking-[0.3em] font-bold text-xs uppercase animate-pulse border border-[#D4AF37]/30 px-6 py-2 rounded-full backdrop-blur-sm transition-all group-hover:bg-[#D4AF37]/10">Tap to Unwrap</p>
+        </div>
+        
+        <!-- Confetti wrapper -->
+        <div id="confetti-container" class="absolute inset-0 pointer-events-none z-0"></div>
+    </div>
+
+    <!-- Toolkit Content (Hidden Initially) -->
+    <main id="main-content" class="relative z-10 w-full min-h-screen opacity-0 transition-opacity duration-1000 pt-24 px-6 md:px-12 xl:px-24 hidden">
+        
+        <header class="text-center mb-20 stagger-reveal">
+            <h3 class="text-[#D4AF37] tracking-[0.4em] text-xs font-bold uppercase mb-4 opacity-80">Exclusive Access Granted</h3>
+            <h1 class="font-serif text-5xl md:text-7xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#E0DBC5] via-[#ffffff] to-[#E0DBC5]">Klyperix Toolkit</h1>
+            <p class="max-w-2xl mx-auto text-lg opacity-70 leading-relaxed">
+                Welcome to the inner circle. Below are the foundational tools, assets, and logic we use to engineer pure cinematic reality.
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            
+            <!-- Asset Card 1 -->
+            <div class="glass-panel p-10 rounded-3xl stagger-reveal relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#D4AF37] blur-[80px] opacity-10 group-hover:opacity-30 transition-opacity"></div>
+                <div class="font-serif text-5xl mb-6 text-[#57C16F] opacity-50 font-bold italic">01</div>
+                <h3 class="font-serif text-3xl text-white mb-4">UI Components</h3>
+                <p class="text-sm opacity-70 leading-relaxed mb-8">
+                    Our customized glassmorphic panels, spatial buttons, and responsive grid frameworks. Ready for React, Vue, or Vanilla integration.
+                </p>
+                <button class="px-8 py-3 rounded-full text-xs font-bold uppercase tracking-[0.2em] border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#050E07] transition-colors w-full">Download Package</button>
+            </div>
+            
+            <!-- Asset Card 2 -->
+            <div class="glass-panel p-10 rounded-3xl stagger-reveal relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#57C16F] blur-[80px] opacity-10 group-hover:opacity-30 transition-opacity"></div>
+                <div class="font-serif text-5xl mb-6 text-[#57C16F] opacity-50 font-bold italic">02</div>
+                <h3 class="font-serif text-3xl text-white mb-4">3D Canvas Setup</h3>
+                <p class="text-sm opacity-70 leading-relaxed mb-8">
+                    Optimized WebGL mounts, fallback systems, and dynamic intersection observers designed to push 60fps cinematic scenes without latency.
+                </p>
+                <button class="px-8 py-3 rounded-full text-xs font-bold uppercase tracking-[0.2em] border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#050E07] transition-colors w-full">View Repository</button>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-24 mb-16 stagger-reveal">
+            <a href="../klyperix.html" class="inline-block px-10 py-4 text-xs tracking-[0.2em] uppercase font-bold text-[#050E07] bg-white rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">Retreat to Core System</a>
+        </div>
+    </main>
+
+    <script>
+        function shootConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#D4AF37', '#FFD700', '#FFFFFF', '#57C16F', '#8B0000'];
+            
+            // Fire 100 particles
+            for(let i = 0; i < 120; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti-piece rounded-sm';
+                
+                // Randomize style
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.width = (Math.random() * 8 + 4) + 'px';
+                conf.style.height = (Math.random() * 14 + 6) + 'px';
+                
+                // Start center
+                conf.style.left = '50%';
+                conf.style.top = '50%';
+                
+                container.appendChild(conf);
+                
+                // Animate
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 80 + Math.random() * 250;
+                
+                // X distance
+                const tx = Math.cos(angle) * velocity * (Math.random() > 0.5 ? 2.5 : 1.5);
+                // Y distance (bias heavily upwards for explosion effect)
+                const ty = Math.sin(angle) * velocity - 250 - Math.random() * 200; 
+                
+                const rotation = Math.random() * 720 - 360;
+                
+                conf.animate([
+                    { transform: 'translate(-50%, -50%) rotate(0deg) scale(1)', opacity: 1 },
+                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${rotation}deg) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 1200 + Math.random() * 800,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1.000)', // easeOutCubic
+                    fill: 'forwards'
+                });
+            }
+        }
+
+        let isOpened = false;
+
+        function openGift() {
+            if(isOpened) return;
+            isOpened = true;
+
+            const box = document.querySelector('.gift-box-wrapper');
+            const lid = document.querySelector('.box-lid');
+            const body = document.querySelector('.box-body');
+            const intro = document.getElementById('intro-screen');
+            const main = document.getElementById('main-content');
+            
+            // Stop floating
+            box.style.animation = 'none';
+            // Start shaking
+            box.classList.add('shake');
+            document.querySelector('.gift-box-wrapper p').style.opacity = '0';
+            
+            // Wait for shake to finish, then boom
+            setTimeout(() => {
+                box.classList.remove('shake');
+                
+                // Pop lid and body
+                lid.classList.add('open-lid');
+                body.classList.add('open-body');
+                
+                // Explode confetti
+                shootConfetti();
+                
+                // Fade out intro, show main
+                setTimeout(() => {
+                    intro.style.background = 'transparent';
+                    intro.style.opacity = '0';
+                    intro.style.pointerEvents = 'none';
+                    intro.style.backdropFilter = 'blur(10px)'; // Sweep away blur
+                    
+                    document.body.style.overflow = 'auto'; // allow scroll
+                    main.classList.remove('hidden');
+                    
+                    // Small delay to allow display flex to apply before opacity fade in
+                    setTimeout(() => {
+                        main.classList.remove('opacity-0');
+                        
+                        // Setup scroll reveal for the items
+                        const reveals = document.querySelectorAll('.stagger-reveal');
+                        reveals.forEach((el, i) => {
+                            setTimeout(() => el.classList.add('active'), i * 150 + 200);
+                        });
+                        
+                    }, 50);
+                    
+                }, 900); // Intro fade out start
+                
+            }, 600); // Shake duration
+        }
+    </script>
+    <!-- Supabase & Admin Recognition -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+</body>
+</html>

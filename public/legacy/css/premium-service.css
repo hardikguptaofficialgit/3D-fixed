@@ -1,0 +1,293 @@
+/* 
+   PREMIUM SERVICE TEMPLATE CSS
+   Brand Identity: Deep Emerald (#004e2b) & Almond Silk (#e9e3d6)
+   Style: Luxurious, Fluid, Glassmorphism
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+    --primary: #004e2b;
+    --primary-rgb: 0, 78, 43;
+    --secondary: #e9e3d6;
+    --secondary-rgb: 233, 227, 214;
+    --black: #050E07;
+    --forest: #0a2f1f;
+    
+    /* Default Dark Mode (Emerald Base) */
+    --bg-color: var(--black);
+    --text-main: var(--secondary);
+    --text-alt: var(--primary);
+    
+    --glass-bg: rgba(0, 78, 43, 0.15);
+    --glass-border: rgba(233, 227, 214, 0.12);
+    --glass-blur: 20px;
+    --glass-radius: 32px;
+    
+    --mesh-color-1: var(--primary);
+    --mesh-color-2: #000000;
+    --mesh-color-3: var(--forest);
+    
+    --transition-smooth: all 0.7s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+body.light-theme {
+    --bg-color: var(--secondary);
+    --text-main: var(--primary);
+    --text-alt: var(--secondary);
+    
+    --glass-bg: rgba(0, 78, 43, 0.08); /* Emerald tinted glass */
+    --glass-border: rgba(0, 78, 43, 0.1);
+    --glass-blur: 15px;
+    
+    --mesh-color-1: #ffffff;
+    --mesh-color-2: var(--secondary);
+    --mesh-color-3: #f5f0e6;
+}
+
+/* Global Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+    transition: var(--transition-smooth);
+}
+
+h1, h2, h3, h4, .serif {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+}
+
+/* Mesh Gradient Background */
+.mesh-background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 0% 0%, var(--mesh-color-1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, var(--mesh-color-2) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, var(--mesh-color-3) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, var(--mesh-color-1) 0%, transparent 50%);
+    background-size: 200% 200%;
+    animation: meshMovement 20s ease-in-out infinite alternate;
+}
+
+@keyframes meshMovement {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Curved Glass Container */
+.curved-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--glass-radius);
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.curved-glass:hover {
+    border-color: rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-5px);
+}
+
+/* Portfolio Layouts & Ratios */
+
+/* 1. Marquee (Horizontal) */
+.marquee-container {
+    overflow: hidden;
+    padding: 2rem 0;
+    width: 100%;
+}
+
+.marquee-track {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    animation: marqueeScroll 40s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* 2. Grid (Portfolio) */
+.premium-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+
+/* 3. Masonry Layout */
+.masonry-layout {
+    columns: 2;
+    column-gap: 2rem;
+    width: 100%;
+}
+
+.masonry-item {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+}
+
+/* Aspect Ratio Utilities */
+.ratio-1-1 { aspect-ratio: 1 / 1; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+.ratio-9-16 { aspect-ratio: 9 / 16; }
+.ratio-800-800 { width: 100%; height: auto; aspect-ratio: 1 / 1; max-width: 800px; }
+
+.media-wrapper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.1);
+}
+
+.media-wrapper video, .media-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+.media-wrapper:hover video, .media-wrapper:hover img {
+    transform: scale(1.05);
+}
+
+/* Hover-to-Play Overlay */
+.video-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    opacity: 1;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.media-wrapper:hover .video-overlay {
+    opacity: 0;
+}
+
+/* Component: Header */
+header.premium-nav {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 1200px;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 100px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    opacity: 0.7;
+    transition: var(--transition-smooth);
+}
+
+.nav-links a:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* Bento Layout */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.bento-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bento-item.large { grid-column: span 2; grid-row: span 2; }
+.bento-item.wide { grid-column: span 2; }
+
+/* Typography Extras */
+.hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.9;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+.subtitle {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+    margin-bottom: 1rem;
+}
+
+/* Theme Toggle */
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    backdrop-filter: blur(10px);
+}
+
+/* Animations */
+.reveal-up {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@media (max-width: 768px) {
+    .premium-grid, .bento-grid { grid-template-columns: 1fr; }
+    .masonry-layout { columns: 1; }
+    header.premium-nav { padding: 1rem; }
+    .nav-links { display: none; }
+}

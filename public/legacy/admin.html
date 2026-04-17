@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klyperix — Sign In</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050E07;
+            --surface: #0A160D;
+            --text: #E0DBC5;
+            --accent: #57C16F;
+            --muted: #2c9e50;
+            --glass-bg: rgba(18, 36, 24, 0.45);
+            --glass-border: rgba(87, 193, 111, 0.15);
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Ambient Background ── */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 60%, rgba(87, 193, 111, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 30%, rgba(44, 158, 80, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 80% at 50% 50%, rgba(18, 36, 24, 0.15) 0%, transparent 70%);
+            animation: drift 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.15) translate(1.5%, -1%);
+            }
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(5, 14, 7, 0.92) 100%);
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.03;
+            mix-blend-mode: soft-light;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+        }
+
+        /* ── Login Card ── */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 0 1.5rem;
+        }
+
+        .login-card {
+            background: rgba(18, 36, 24, 0.5);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 3.5rem 3rem 3rem;
+            box-shadow:
+                inset 0 1px 0 rgba(224, 219, 197, 0.06),
+                0 30px 80px rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card.shake {
+            animation: cardShake 0.5s ease;
+        }
+
+        @keyframes cardShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            15%,
+            45%,
+            75% {
+                transform: translateX(-8px);
+            }
+
+            30%,
+            60%,
+            90% {
+                transform: translateX(8px);
+            }
+        }
+
+        /* ── Branding ── */
+        .brand {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.05em;
+        }
+
+        .brand-line {
+            width: 40px;
+            height: 1px;
+            background: var(--glass-border);
+            margin: 1rem auto 0;
+        }
+
+        /* ── Form ── */
+        .field {
+            margin-bottom: 1.5rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(87, 193, 111, 0.12);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .field input:focus {
+            border-color: rgba(87, 193, 111, 0.35);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .field input::placeholder {
+            color: rgba(224, 219, 197, 0.25);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            background: var(--muted);
+            color: #050E07;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(87, 193, 111, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(5, 14, 7, 0.3);
+            border-top-color: #050E07;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        .submit-btn.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Error */
+        .error-msg {
+            text-align: center;
+            font-size: 11px;
+            color: #e74c3c;
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            min-height: 1.2em;
+        }
+
+        .error-msg.visible {
+            opacity: 1;
+        }
+
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(87, 193, 111, 0.08);
+        }
+
+        .login-footer p {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.2;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 2.5rem 1.8rem 2rem;
+            }
+
+            .brand-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient"></div>
+    <div class="vignette"></div>
+    <div class="noise"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card" id="loginCard">
+            <div class="brand">
+                <div class="brand-name">Klyperix</div>
+                <div class="brand-line"></div>
+            </div>
+
+            <form id="loginForm" autocomplete="off">
+                <div id="step-1">
+                    <div class="field">
+                        <label for="email">Identity Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required autofocus>
+                    </div>
+                    <div class="field">
+                        <label for="password">Authentication Key</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••••••" required>
+                    </div>
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        <span class="btn-text">Authenticate</span>
+                        <div class="spinner"></div>
+                    </button>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <span style="font-size: 10px; color: var(--muted); opacity: 0.8;">Admin Access Only</span>
+                    </div>
+                </div>
+            </form>
+
+            <div class="error-msg" id="errorMsg"></div>
+
+            <div class="login-footer">
+                <p>&copy; Klyperix 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        // Ensure Supabase config is ready (loaded from /api/public-config).
+        async function getReadySupabase() {
+            try { if (window.__klypSupabaseReady) await window.__klypSupabaseReady; } catch (e) {}
+            return getSupabaseClient();
+        }
+
+        let sb = null;
+        const form = document.getElementById('loginForm');
+        const card = document.getElementById('loginCard');
+        const errEl = document.getElementById('errorMsg');
+        
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const sendCodeBtn = document.getElementById('sendCodeBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+
+        // ── Stability & Redirect ──
+        (async () => {
+            sb = await getReadySupabase();
+            if (!sb) {
+                errEl.textContent = "CRITICAL: System connection unavailable. Check your internet or project configuration.";
+                errEl.classList.add('visible');
+                return;
+            }
+
+            try {
+                const { data: { session }, error } = await sb.auth.getSession();
+                if (error) throw error;
+                
+                if (session) {
+                    if (window.isKlyperixAdmin(session.user.email)) {
+                        window.location.href = 'panel.html';
+                    } else {
+                        await sb.auth.signOut();
+                    }
+                }
+            } catch (e) {
+                console.error('[Admin] Session check failed:', e);
+            } finally {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        })();
+
+        // ── Authentication Engine ──
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!sb) sb = await getReadySupabase();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            if (!email || !password) return;
+
+            // 1. Strict Whitelist Check (Local)
+            if (!window.isKlyperixAdmin(email)) {
+                errEl.textContent = 'Unauthorized Identity. Access Denied.';
+                errEl.classList.add('visible');
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 500);
+                return;
+            }
+
+            errEl.classList.remove('visible');
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+
+            try {
+                // Attempt Login
+                let { data, error } = await sb.auth.signInWithPassword({ email, password });
+                
+                // If credentials invalid, they might be an authorized user trying to login for the first time.
+                // We attempt to sign them up securely.
+                if (error && error.message.toLowerCase().includes("invalid login credentials")) {
+                    console.log("[Auth] Attempting auto-provisioning for authorized user...");
+                    const signUpRes = await sb.auth.signUp({ email, password });
+                    if (signUpRes.error) throw signUpRes.error;
+                    data = signUpRes.data;
+                    error = signUpRes.error;
+                } else if (error) {
+                    throw error;
+                }
+
+                if (!data || !data.session) {
+                    throw new Error('Authentication failed. If you just signed up, you may need to confirm your email link depending on Supabase settings.');
+                }
+
+                localStorage.setItem('klyperix_admin_recognized', 'true');
+                window.location.href = 'panel.html';
+
+            } catch (err) {
+                console.error('[Auth Error]', err);
+                errEl.textContent = err.message;
+                errEl.classList.add('visible');
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 500);
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

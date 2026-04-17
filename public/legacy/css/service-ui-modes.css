@@ -1,0 +1,158 @@
+/* 
+   KLYPERIX THEMATIC UI EXTENSION
+   Dedicated styling for 3D Volumetric and 2D Vector modes
+*/
+
+/* ========================================================
+   3D UI MODE (.ui-3d-mode)
+   ======================================================== */
+   
+.ui-3d-mode .master-container {
+    perspective: 1500px;
+    transform-style: preserve-3d;
+}
+
+/* Thicker volumetric glass */
+.ui-3d-mode .glass-panel {
+    background: linear-gradient(135deg, rgba(0, 78, 43, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+    box-shadow: 
+        inset 0 4px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -4px 0 rgba(0, 0, 0, 0.6),
+        0 40px 80px rgba(0, 0, 0, 0.9),
+        0 15px 25px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 40px;
+    transform-style: preserve-3d;
+    transform: translateZ(20px);
+}
+
+.light-theme.ui-3d-mode .glass-panel {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(233, 227, 214, 0.5) 100%);
+    box-shadow: 
+        inset 0 4px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -4px 0 rgba(0, 78, 43, 0.1),
+        0 30px 60px rgba(0, 78, 43, 0.15),
+        0 15px 20px rgba(0, 78, 43, 0.05);
+}
+
+/* 3D floating media */
+.ui-3d-mode .carousel-item {
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+.ui-3d-mode .media-card {
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    transform: translateZ(40px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.light-theme.ui-3d-mode .media-card {
+    box-shadow: 0 20px 40px rgba(0, 78, 43, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.ui-3d-mode .item-title {
+    transform: translateZ(60px);
+    text-shadow: 0 10px 20px rgba(0,0,0,0.8);
+}
+
+/* ========================================================
+   2D UI MODE (.ui-2d-mode)
+   ======================================================== */
+
+.ui-2d-mode .premium-bg {
+    /* Make background flat and grid-like instead of organic mesh */
+    background: var(--bg-primary);
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    filter: none;
+    animation: none;
+}
+
+.light-theme.ui-2d-mode .premium-bg {
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+}
+
+/* Flat solid panels, no blur */
+.ui-2d-mode .glass-panel {
+    background: var(--bg-secondary);
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 2px solid var(--text-primary);
+    border-radius: 0;
+    box-shadow: 15px 15px 0px var(--accent); /* Hard offset shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+.light-theme.ui-2d-mode .glass-panel {
+    border: 2px solid var(--bg-primary);
+    box-shadow: 15px 15px 0px var(--text-primary);
+}
+
+.ui-2d-mode .panel-header {
+    border-bottom: 2px solid var(--text-primary);
+    padding-bottom: 1.5rem;
+}
+
+.ui-2d-mode .media-card {
+    border-radius: 0;
+    border: 2px solid var(--text-primary);
+    box-shadow: 8px 8px 0px var(--bg-primary);
+    background: var(--accent);
+}
+
+.light-theme.ui-2d-mode .media-card {
+    border-color: var(--text-primary);
+    box-shadow: 8px 8px 0px var(--bg-secondary);
+}
+
+/* Sharp Typography */
+.ui-2d-mode .panel-title, 
+.ui-2d-mode .item-title, 
+.ui-2d-mode .page-title {
+    font-family: 'Poppins', sans-serif; /* Override serif for tech/flat look */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+
+.ui-2d-mode .panel-tag {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    padding: 4px 12px;
+    font-weight: 700;
+}
+
+/* Flatten hover states */
+.ui-2d-mode .carousel-item:hover {
+    transform: translate(-4px, -4px);
+}
+.ui-2d-mode .marquee-track:hover .carousel-item:not(:hover) {
+    filter: none; /* No blur in 2D */
+    opacity: 0.5;
+}
+.ui-2d-mode .marquee-track:hover .carousel-item:hover {
+    filter: none;
+    transform: translate(-4px, -4px);
+}
+
+/* Button overrides for 2D */
+.ui-2d-mode .contact-btn {
+    border-radius: 0;
+    border: 2px solid var(--text-primary);
+    background: transparent;
+    box-shadow: 6px 6px 0px var(--accent);
+}
+
+.ui-2d-mode .contact-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--accent);
+    background: var(--text-primary);
+    color: var(--bg-primary);
+}

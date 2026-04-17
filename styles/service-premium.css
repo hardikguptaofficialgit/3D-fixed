@@ -1,0 +1,512 @@
+/* 
+   KLYPERIX PREMIUM SERVICE DESIGN SYSTEM
+   Professional & Minimalist Luxury
+   Brand Identity: Deep Emerald (#004e2b) & Almond Silk (#e9e3d6)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+    /* DARK MODE (DEFAULT) */
+    --bg-primary: #020804;
+    --bg-secondary: #004e2b;
+    --text-primary: #e9e3d6;
+    --text-secondary: rgba(233, 227, 214, 0.7);
+    --accent: #2c9e50;
+    
+    --glass-bg: rgba(0, 78, 43, 0.12);
+    --glass-border: rgba(233, 227, 214, 0.1);
+    --glass-blur: 32px;
+    --glass-radius: 36px;
+    --glass-shadow: rgba(0, 0, 0, 0.8);
+    
+    --nav-height: 80px;
+    --container-max: 1300px;
+    
+    /* Mesh Gradients Colors */
+    --mesh-1: #004e2b;
+    --mesh-2: #020804;
+    --mesh-3: #1a3a2a;
+    
+    --transition-base: all 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+    --transition-theme: background-color 1.2s cubic-bezier(0.2, 1, 0.2, 1), 
+                        color 1.2s cubic-bezier(0.2, 1, 0.2, 1),
+                        border-color 1.2s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+body.light-theme {
+    /* LIGHT MODE Overrides */
+    --bg-primary: #e9e3d6;
+    --bg-secondary: #f5f0e6;
+    --text-primary: #004e2b;
+    --text-secondary: rgba(0, 78, 43, 0.7);
+    
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(0, 78, 43, 0.08);
+    --glass-shadow: rgba(0, 78, 43, 0.05);
+    
+    --mesh-1: #ffffff;
+    --mesh-2: #e9e3d6;
+    --mesh-3: #fcfaf5;
+}
+
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: var(--transition-theme);
+}
+
+h1, h2, h3, h4, .serif {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+}
+
+/* Premium Mesh Background */
+.premium-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: 
+        radial-gradient(circle at 15% 15%, var(--mesh-1) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, var(--mesh-3) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, var(--mesh-2) 0%, transparent 55%);
+    background-size: 150% 150%;
+    animation: meshMovement 30s ease-in-out infinite alternate;
+    transition: var(--transition-theme);
+    filter: saturate(1.2) contrast(1.1);
+}
+
+@keyframes meshMovement {
+    0% { background-position: 0% 0%; transform: scale(1); }
+    50% { background-position: 100% 100%; transform: scale(1.02); }
+    100% { background-position: 0% 100%; }
+}
+
+/* Removed Noise Overlay for Non-AI Look */
+
+/* Professional Layout */
+.master-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 120px 2rem 5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-head {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.page-title {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 0.9;
+}
+
+.page-desc {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* Refined Glass Panel */
+.glass-panel {
+    width: 100%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--glass-radius);
+    padding: 4rem;
+    margin-bottom: 4rem;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.05), 0 20px 60px var(--glass-shadow);
+    transition: var(--transition-base);
+}
+
+.light-theme .glass-panel {
+    box-shadow: 0 15px 40px var(--glass-shadow);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.panel-title {
+    font-size: 2.5rem;
+}
+
+.panel-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+}
+
+/* Portfolio Interactions */
+/* Portfolio Interactions & Sibling Blur */
+.carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.marquee-track {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    animation: marquee 50s linear infinite;
+    transition: filter 0.8s ease;
+}
+
+/* Sibling Blur Logic */
+.marquee-track:hover .carousel-item:not(:hover) {
+    filter: blur(12px) grayscale(0.5);
+    opacity: 0.3;
+    transform: scale(0.95);
+}
+
+.marquee-track:hover .carousel-item:hover {
+    filter: blur(0) grayscale(0);
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+    z-index: 100;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.carousel-item {
+    transition: var(--transition-base);
+    cursor: pointer;
+}
+
+.carousel-item:hover {
+    transform: scale(1.02) translateY(-10px);
+}
+
+.media-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--glass-border);
+    position: relative;
+}
+
+.media-card video, .media-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+/* Integrated Premium Navigation */
+.premium-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+    z-index: 1000;
+    background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.7;
+    transition: var(--transition-base);
+}
+
+.nav-link:hover { opacity: 1; transform: translateX(-5px); }
+
+.brand-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+.theme-toggle {
+    margin-left: auto; /* Push to right if no other elements */
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-base);
+}
+
+.theme-toggle:hover {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+}
+
+/* Integrated Cinema Focus Engine */
+#cinemaOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(252, 250, 244, 0.05); /* Very light warm tint */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+    cursor: zoom-out; /* Indicate click-to-exit */
+}
+
+body.cinema-mode .master-container {
+    filter: blur(15px) brightness(0.8);
+    pointer-events: none;
+    transition: filter 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+body.light-theme.cinema-mode .master-container {
+    filter: blur(12px) brightness(1.05); /* Pop the light theme focus */
+}
+
+body.cinema-mode .premium-nav {
+    transform: translateY(-100%);
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+#cinemaOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cinema-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.95);
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+    z-index: 10001;
+}
+
+#cinemaOverlay.active .cinema-stage {
+    transform: scale(1) translateY(0);
+}
+
+.cinema-media {
+    width: auto;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    object-fit: contain;
+    background: transparent;
+    pointer-events: auto;
+    cursor: default;
+    /* GSAP will handle the transform */
+}
+
+/* Cinematic Navigation Controls */
+.cinema-nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 10010;
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#cinemaOverlay.active .cinema-nav-btn {
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+.cinema-nav-btn:hover {
+    opacity: 1 !important;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.cinema-nav-btn.prev { left: 40px; }
+.cinema-nav-btn.next { right: 40px; }
+
+.cinema-nav-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+}
+
+/* Hide on very small screens if needed */
+@media (max-width: 768px) {
+    .cinema-nav-btn {
+        width: 44px;
+        height: 44px;
+    }
+    .cinema-nav-btn.prev { left: 15px; }
+    .cinema-nav-btn.next { right: 15px; }
+}
+
+/* Light Theme Visibility Fix */
+body.light-theme .cinema-nav-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #1a1a1a;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .cinema-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* Force scaling classes - "Non-JS" approach */
+.focus-vertical {
+    height: 88vh !important;
+    width: auto !important;
+    max-width: 95vw !important;
+}
+
+.focus-horizontal {
+    width: 88vw !important;
+    height: auto !important;
+    max-height: 90vh !important;
+}
+
+/* Removed Cinema Nav elements for integrated hover-stop feel */
+
+/* Premium Contact Section */
+.contact-tier {
+    padding: 10rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    margin-bottom: 4rem;
+    line-height: 1.1;
+    background: linear-gradient(to right, var(--text-primary), rgba(233, 227, 214, 0.5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-btn:hover {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 78, 43, 0.2);
+}
+
+.contact-btn svg { width: 20px; height: 20px; }
+
+@media (max-width: 768px) {
+    .cinema-nav { width: 44px; height: 44px; }
+    .cinema-prev { left: -10px; }
+    .cinema-next { right: -10px; }
+    .contact-links { gap: 1.5rem; }
+}
+
+/* Aspect Ratio Utilities */
+.ratio-9-16 { aspect-ratio: 9/16; width: 300px; }
+.ratio-1-1 { aspect-ratio: 1/1; width: 400px; }
+.ratio-16-9 { aspect-ratio: 16/9; width: 600px; }
+
+@media (max-width: 768px) {
+    .glass-panel { padding: 2rem; }
+    .ratio-9-16, .ratio-1-1, .ratio-16-9 { width: 85vw; }
+    header.premium-nav { width: 92%; justify-content: space-between; gap: 1rem; }
+    .nav-link span { display: none; }
+}

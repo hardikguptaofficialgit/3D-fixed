@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sizing Fix Preview | Klyperix</title>
+    <link rel="stylesheet" href="../css/service-premium.css">
+    <style>
+        .demo-section {
+            padding: 10vh 5vw;
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+            align-items: center;
+        }
+        .demo-label {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="premium-bg"></div>
+
+    <header class="premium-nav">
+        <a href="../klyperix.html" class="nav-link"><span>&larr;</span> HQ</a>
+        <div class="brand-title serif">KLYPERIX PRODUCTION</div>
+    </header>
+
+    <main class="master-container">
+        <div class="demo-section">
+            
+            <div style="text-align: center;">
+                <h2 class="demo-label">1. Horizontal Fix (16:9)</h2>
+                <div class="marquee-track">
+                    <div class="carousel-item">
+                        <div class="media-card ratio-16-9" style="width: 600px;">
+                            <video loop muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-glittering-bright-gold-31853-large.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <p class="mt-4 opacity-50">Hover to see wide focus</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <h2 class="demo-label">2. Vertical Fix (9:16)</h2>
+                <div class="marquee-track">
+                    <div class="carousel-item">
+                        <div class="media-card ratio-9-16" style="width: 300px;">
+                            <video loop muted playsinline>
+                                <source src="https://assets.mixkit.co/videos/preview/mixkit-dynamic-liquid-shapes-with-gradient-colors-32634-large.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <p class="mt-4 opacity-50">Hover to see full-height vertical focus</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/service-premium.js"></script>
+</body>
+</html>
