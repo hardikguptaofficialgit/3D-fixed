@@ -145,7 +145,8 @@ body {
     padding: 0;
     width: 100%;
     height: 100vh;
-    min-height: 100vh; /* Prevents 0-dimension WebGL crashes */
+    min-height: 100vh;
+    /* Prevents 0-dimension WebGL crashes */
     background: var(--bg-color);
     color: var(--text-color);
     font-family: 'Poppins', sans-serif;
@@ -431,18 +432,22 @@ body {
     cursor: pointer;
 }
 
-#hero-spline-dark, #hero-spline-light {
+#hero-spline-dark,
+#hero-spline-light {
     z-index: 2;
-    mix-blend-mode: screen; /* Makes black background transparent for dark theme */
+    mix-blend-mode: screen;
+    /* Makes black background transparent for dark theme */
     -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 .light-theme #hero-spline-light {
-    mix-blend-mode: multiply; /* Makes white background transparent for light theme */
+    mix-blend-mode: multiply;
+    /* Makes white background transparent for light theme */
 }
 
-#bg-spline-dark, #bg-spline-light {
+#bg-spline-dark,
+#bg-spline-light {
     z-index: 1;
 }
 
@@ -493,7 +498,8 @@ body {
 
 /* ── GLOBAL SECTION BEHAVIOR ── */
 section {
-    scroll-margin-top: 120px; /* Precise clearance for Dynamic Island */
+    scroll-margin-top: 120px;
+    /* Precise clearance for Dynamic Island */
     position: relative;
     z-index: 10;
 }
@@ -504,7 +510,8 @@ header {
     top: clamp(10px, 4vmin, 32px);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10000; /* Absolute highest priority above contact section */
+    z-index: 10000;
+    /* Absolute highest priority above contact section */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -544,11 +551,12 @@ header.nav-hidden {
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     overflow: hidden;
-    background: transparent; /* Removed background to prevent empty space tint */
+    background: transparent;
+    /* Removed background to prevent empty space tint */
     backdrop-filter: blur(25px) saturate(2);
     -webkit-backdrop-filter: blur(25px) saturate(2);
     border: 1px solid var(--glass-border);
-    box-shadow: 
+    box-shadow:
         0 15px 35px var(--glass-shadow),
         0 0 20px rgba(168, 85, 247, 0.15);
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
@@ -566,7 +574,7 @@ header.nav-hidden {
 .logo-wrapper:hover {
     transform: scale(1.08) rotate(3deg);
     border-color: var(--nav-active);
-    box-shadow: 
+    box-shadow:
         inset 0 0 20px var(--glass-highlight),
         0 20px 50px var(--glass-shadow),
         0 0 30px rgba(168, 85, 247, 0.3);
@@ -575,10 +583,13 @@ header.nav-hidden {
 .circle-logo {
     width: 100%;
     height: 100%;
-    object-fit: cover !important;
-    object-position: center 62%; /* Shifted down for better centering */
+    object-fit: cover;
+    object-position: center;
+    padding-top: 6px;
+    /* Adjusted to move logo slightly down */
     border-radius: 50%;
-    transform: scale(2.1); /* Slightly smaller scale as requested */
+    transform: scale(2.1);
+    /* Slightly smaller scale as requested */
     transition: transform 0.5s ease;
     image-rendering: -webkit-optimize-contrast;
     flex-shrink: 0;
@@ -775,16 +786,20 @@ section {
 
 #spline-explore-target {
     position: absolute;
-    bottom: 24vh; /* Moved significantly higher to avoid timeline overlap */
+    bottom: 24vh;
+    /* Moved significantly higher to avoid timeline overlap */
     left: 50%;
     transform: translateX(-50%);
-    width: 180px; /* Refined size to match the Spline button precisely */
-    height: 120px; /* Refined size to match the Spline button precisely */
-    z-index: 1000; /* High, but below Dynamic Island/Modals */
+    width: 180px;
+    /* Refined size to match the Spline button precisely */
+    height: 120px;
+    /* Refined size to match the Spline button precisely */
+    z-index: 1000;
+    /* High, but below Dynamic Island/Modals */
     cursor: pointer;
     pointer-events: auto;
     border-radius: 40px;
-    background: rgba(255, 255, 255, 0); 
+    background: rgba(255, 255, 255, 0);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -876,7 +891,7 @@ section {
 .light-theme .card-icon {
     background: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 
+    box-shadow:
         inset 0 1px 2px rgba(255, 255, 255, 0.6),
         0 4px 10px rgba(168, 85, 247, 0.05);
 }
@@ -1452,7 +1467,8 @@ section {
     font-size: 0.85rem;
     letter-spacing: 0.5em;
     text-transform: uppercase;
-    color: var(--bone-lavender); /* Dark theme default */
+    color: var(--bone-lavender);
+    /* Dark theme default */
     opacity: 0.6;
     margin-top: 4rem;
     margin-bottom: 3rem;
@@ -1460,13 +1476,15 @@ section {
 }
 
 .light-theme .happy-clients-subtitle {
-    color: var(--luxury-purple); /* Essential for light theme visibility */
+    color: var(--luxury-purple);
+    /* Essential for light theme visibility */
 }
 
 .marquee-container {
     width: 100%;
     overflow: hidden;
-    padding: 2rem 0; /* Ensure NO clipping */
+    padding: 2rem 0;
+    /* Ensure NO clipping */
     position: relative;
 }
 
@@ -1474,7 +1492,8 @@ section {
     display: flex;
     align-items: stretch;
     width: max-content;
-    animation: marquee-scroll 60s linear infinite; /* Slow it down for luxury feel */
+    animation: marquee-scroll 60s linear infinite;
+    /* Slow it down for luxury feel */
     will-change: transform;
 }
 
@@ -1494,30 +1513,42 @@ section {
 
 .luxury-card {
     flex-shrink: 0;
-    width: 400px; /* Reduced width for dense text */
-    min-height: 220px; /* Fix height consistency */
+    width: 400px;
+    /* Reduced width for dense text */
+    min-height: 220px;
+    /* Fix height consistency */
     margin: 0 1.5rem;
-    padding: 2rem; /* Increase padding */
-    border-radius: 24px; /* More premium */
-    background: rgba(var(--bg-rgb), 0.08); /* Unified glass background */
+    padding: 2rem;
+    /* Increase padding */
+    border-radius: 24px;
+    /* More premium */
+    background: rgba(var(--bg-rgb), 0.08);
+    /* Unified glass background */
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border: 1px solid var(--glass-border); /* Unified border */
-    box-shadow: inset 0 1px 0 var(--glass-highlight); /* Only keep subtle inner highlight, removed outer shadow */
+    border: 1px solid var(--glass-border);
+    /* Unified border */
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    /* Only keep subtle inner highlight, removed outer shadow */
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); /* Smooth transition */
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Smooth transition */
     will-change: transform, box-shadow;
     cursor: default;
-    overflow: hidden; /* Vital to wrap the intrinsic boundaries */
-    color: var(--bone-lavender); /* Extracted from old duplicate */
+    overflow: hidden;
+    /* Vital to wrap the intrinsic boundaries */
+    color: var(--bone-lavender);
+    /* Extracted from old duplicate */
 }
 
 .luxury-card:hover {
-    transform: translateY(-8px) scale(1.02); /* Slight lift */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05); /* Unified shadow */
+    transform: translateY(-8px) scale(1.02);
+    /* Slight lift */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    /* Unified shadow */
 }
 
 /* Light Mode Card */
@@ -1529,7 +1560,8 @@ section {
 
 .luxury-card .quote {
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem; /* Quote text */
+    font-size: 0.95rem;
+    /* Quote text */
     line-height: 1.7;
     margin-bottom: 2rem;
     opacity: 0.8;
@@ -1548,11 +1580,13 @@ section {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-size: 0.8rem;
-    opacity: 0.6; /* Client name opacity */
+    opacity: 0.6;
+    /* Client name opacity */
 }
 
 .luxury-card .stars {
-    background: linear-gradient(90deg, #FFD700, #FFA500); /* Gold gradient */
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    /* Gold gradient */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 0.9rem;
@@ -1575,24 +1609,30 @@ section {
 
 .logo-track {
     display: flex;
-    gap: 8rem; /* Increase spacing between logos */
+    gap: 8rem;
+    /* Increase spacing between logos */
     align-items: center;
     width: max-content;
-    animation: marquee-scroll 80s linear infinite; /* Slightly slower than testimonials */
+    animation: marquee-scroll 80s linear infinite;
+    /* Slightly slower than testimonials */
     will-change: transform;
 }
 
 .luxury-logo {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem; /* Drastically increased size for extreme visibility */
-    font-weight: 700; /* Bold */
+    font-size: 1.5rem;
+    /* Drastically increased size for extreme visibility */
+    font-weight: 700;
+    /* Bold */
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #ffffff; /* Brightest white for contrast */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* Glow effect to punch through */
+    color: #ffffff;
+    /* Brightest white for contrast */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    /* Glow effect to punch through */
     white-space: nowrap;
     position: relative;
-    
+
     /* Circular Glass Effect */
     width: 180px;
     height: 180px;
@@ -1600,10 +1640,12 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent); /* Glass circle background */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent);
+    /* Glass circle background */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05); /* Thinner border */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Thinner border */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, box-shadow;
@@ -1611,10 +1653,12 @@ section {
 }
 
 .luxury-logo:hover {
-    transform: scale(1.1); /* Add hover interaction scale */
+    transform: scale(1.1);
+    /* Add hover interaction scale */
     border-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.25)); /* Glow effect */
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.25));
+    /* Glow effect */
     color: #ffffff;
 }
 
@@ -2323,7 +2367,7 @@ body.hero-active .scroll-indicator {
     display: flex;
     flex-direction: column;
     z-index: 2400;
-    box-shadow: 
+    box-shadow:
         0 40px 100px rgba(0, 0, 0, 0.6),
         inset 0 1px 1px rgba(255, 255, 255, 0.05);
     opacity: 0;
@@ -2463,7 +2507,7 @@ body.hero-active .scroll-indicator {
     align-items: center;
     justify-content: center;
     color: #57C16F;
-    box-shadow: 
+    box-shadow:
         inset 0 1px 1px rgba(255, 255, 255, 0.05),
         0 4px 20px rgba(0, 0, 0, 0.2);
     z-index: 2;
@@ -2473,7 +2517,8 @@ body.hero-active .scroll-indicator {
 }
 
 .chat-btn-glow {
-    display: none; /* Removed cheap glow */
+    display: none;
+    /* Removed cheap glow */
 }
 
 #klypChatBtn:hover .chat-btn-glass {
@@ -2560,7 +2605,8 @@ body.hero-active .scroll-indicator {
 .status-dot {
     width: 8px;
     height: 8px;
-    background: #A855F7; /* Changed from green to Purple */
+    background: #A855F7;
+    /* Changed from green to Purple */
     border-radius: 50%;
     box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
     animation: statusPulse 2s infinite;
@@ -2810,15 +2856,18 @@ body.hero-active .scroll-indicator {
 #contact {
     position: relative;
     z-index: 10;
-    margin-top: 5rem; /* Additional breathing room */
+    margin-top: 5rem;
+    /* Additional breathing room */
 }
+
 .premium-social-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 60px;
     height: 60px;
-    border-radius: 18px; /* High-end rounded square glass look */
+    border-radius: 18px;
+    /* High-end rounded square glass look */
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
@@ -2827,7 +2876,7 @@ body.hero-active .scroll-indicator {
     position: relative;
     z-index: 15;
     text-decoration: none;
-    box-shadow: 
+    box-shadow:
         0 10px 30px rgba(0, 0, 0, 0.2),
         inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
@@ -2854,7 +2903,8 @@ body.hero-active .scroll-indicator {
 /* ── PREMIUM TESTIMONIALS RESPONSIVENESS ── */
 @media (max-width: 1024px) {
     .luxury-card {
-        width: 350px; /* Tablet: 2 cards cleanly */
+        width: 350px;
+        /* Tablet: 2 cards cleanly */
     }
 }
 
@@ -2863,7 +2913,7 @@ body.hero-active .scroll-indicator {
         width: 320px;
         padding: 1.5rem;
     }
-    
+
     .luxury-card .quote {
         font-size: 0.9rem;
     }
@@ -2871,21 +2921,25 @@ body.hero-active .scroll-indicator {
 
 @media (max-width: 640px) {
     #testimonials {
-        padding: 6rem 0; /* Tighter vertical breathing space on mobile */
+        padding: 6rem 0;
+        /* Tighter vertical breathing space on mobile */
     }
-    
+
     .luxury-card {
-        width: 85vw; /* Mobile: 1 card cleanly centered */
+        width: 85vw;
+        /* Mobile: 1 card cleanly centered */
         margin: 0 1rem;
     }
-    
+
     .marquee-track {
-        animation-duration: 100s; /* Reduced speed for mobile readability */
+        animation-duration: 100s;
+        /* Reduced speed for mobile readability */
     }
-    
+
     .marquee-container::before,
     .marquee-container::after {
-        width: 60px; /* Smaller fade edges on mobile */
+        width: 60px;
+        /* Smaller fade edges on mobile */
     }
 }
 
@@ -2935,38 +2989,70 @@ body.hero-active .scroll-indicator {
         -webkit-backdrop-filter: none !important;
     }
 }
+
 /* -- UNIVERSAL ASPECT RATIO SCALING (ENGINEERING BRAND) -- */
 
 /* 16:9 (Desktop Standard) */
-@media (aspect-ratio: 16/9), (min-aspect-ratio: 1.5) {
-    #spline-mount { width: 100vw; height: 100vh; }
-    .nav-pill { gap: 3vmin; }
+@media (aspect-ratio: 16/9),
+(min-aspect-ratio: 1.5) {
+    #spline-mount {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .nav-pill {
+        gap: 3vmin;
+    }
 }
 
 /* 4:3 (Tablet / Legacy Monitor) - Focus on content condensing */
 @media (max-aspect-ratio: 1.4) {
-    header { min-width: clamp(280px, 60vmin, 400px); }
-    .nav-pill { gap: 1.5vmin; }
-    .timeline-container { width: 90%; bottom: 4vh; }
+    header {
+        min-width: clamp(280px, 60vmin, 400px);
+    }
+
+    .nav-pill {
+        gap: 1.5vmin;
+    }
+
+    .timeline-container {
+        width: 90%;
+        bottom: 4vh;
+    }
 }
 
 /* 9:19.5 (Vertical Mobile / iPhone) - Stacked focus */
 @media (max-aspect-ratio: 1/1) {
-    header { 
-        min-width: 85vw; 
+    header {
+        min-width: 85vw;
         padding: 1.5vmin 3vmin;
         border-radius: 30px;
-        top: clamp(60px, 12vh, 100px); /* Move header down on mobile to avoid logo overlap */
+        top: clamp(60px, 12vh, 100px);
+        /* Move header down on mobile to avoid logo overlap */
     }
-    .nav-pill { gap: clamp(8px, 4vmin, 20px); margin-left: 0; }
-    .nav-link { font-size: clamp(8px, 2.5vmin, 11px); padding: 0.4rem 0.8rem; }
-    .logo-wrapper { 
-        top: 20px; 
-        left: 50%; 
-        transform: translateX(-50%); /* Center logo on mobile top */
+
+    .nav-pill {
+        gap: clamp(8px, 4vmin, 20px);
+        margin-left: 0;
     }
-    #klypChatBtn { bottom: 20px; right: 20px; }
-    
+
+    .nav-link {
+        font-size: clamp(8px, 2.5vmin, 11px);
+        padding: 0.4rem 0.8rem;
+    }
+
+    .logo-wrapper {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        /* Center logo on mobile top */
+    }
+
+    #klypChatBtn {
+        bottom: 20px;
+        right: 20px;
+    }
+
     /* Ensure Spline focal point is safe-zoned */
     #spline-mount {
         height: 100vh;
@@ -2976,19 +3062,28 @@ body.hero-active .scroll-indicator {
 
 /* 21:9 (Ultrawide) - Expansive Backgrounds */
 @media (min-aspect-ratio: 2.3) {
-    #spline-mount { transform: scale(1.05); } /* Prevent edge cutoffs */
-    .vignette { background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(5, 0, 16, 1) 100%); }
+    #spline-mount {
+        transform: scale(1.05);
+    }
+
+    /* Prevent edge cutoffs */
+    .vignette {
+        background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(5, 0, 16, 1) 100%);
+    }
 }
 
 /* -- MAGNIFICATION & RETINA SUPPORT -- */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    body { -webkit-font-smoothing: subpixel-antialiased; }
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
 }
 
 /* P3 Color Space for supported devices */
 @media (color-gamut: p3) {
     :root {
-        --accent-p3: color(display-p3 0.34 0.76 0.44); /* More vibrant engineering green */
+        --accent-p3: color(display-p3 0.34 0.76 0.44);
+        /* More vibrant engineering green */
     }
 }
-
