@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       { source: "/klyperix.html", destination: "/" },
-      { source: "/admin.html", destination: "/admin/login" },
-      { source: "/panel.html", destination: "/admin/panel" },
       {
         source: "/pages/video-editing.html",
         destination: "/services/video-editing",

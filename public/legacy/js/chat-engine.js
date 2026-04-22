@@ -109,10 +109,11 @@
         }
 
         const chatBtn = document.getElementById('klypChatBtn');
-        if (chatBtn) {
+        const chatPanel = document.getElementById('klypChatPanel');
+        if (chatBtn && chatPanel) {
             chatBtn.addEventListener('click', () => {
-                document.getElementById('klypChatPanel').classList.add('visible');
-                chatBtn.classList.add('open');
+                const isVisible = chatPanel.classList.toggle('visible');
+                chatBtn.classList.toggle('open', isVisible);
             });
         }
 
@@ -155,7 +156,7 @@
             
             // Success UI
             ticketSection.innerHTML = `
-                <div class="tk-header" style="color:#57C16F">✔ Ticket Transmitted</div>
+                <div class="tk-header" style="color:#A855F7">✔ Ticket Transmitted</div>
                 <p style="font-size: 11px; opacity: 0.7; margin: 4px 0 12px;">Your inquiry has been logged in our secure vault. The owner will review your session and reach out shortly.</p>
             `;
         } catch (err) {

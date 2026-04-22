@@ -101,15 +101,11 @@
         if (lowEnd) return;
         const isLight = document.body.classList.contains('light-theme');
 
-        let targetViewer;
-        if (currentScene === 'hero') {
-            targetViewer = isLight ? heroSplineLight : heroSplineDark;
-        } else {
-            targetViewer = isLight ? bgSplineLight : bgSplineDark;
-        }
-
+        // Keep both hero and bg splines active for the current theme.
+        // The hero spline will physically scroll up via translateY, smoothly revealing the bg spline underneath!
         allSplines.forEach(s => {
-            if (s === targetViewer) {
+            const isTargetTheme = isLight ? s.id.includes('-light') : s.id.includes('-dark');
+            if (isTargetTheme) {
                 s.style.display = '';
                 s.classList.add('active');
             } else {
@@ -203,6 +199,46 @@
             document.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
         });
 
+        // ── Timeline & Hero Spline Visibility on Scroll ──
+        const timeline = document.getElementById('cinematicTimeline');
+        const heroDark = document.getElementById('hero-spline-dark');
+        const heroLight = document.getElementById('hero-spline-light');
+        const header = document.getElementById('dynamic-island');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            
+            // Dynamic Island Auto-hide on Scroll Down, Show on Scroll Up
+            if (header) {
+                if (scrollY > 150 && scrollY > lastScrollY) {
+                    header.classList.add('nav-hidden');
+                } else {
+                    header.classList.remove('nav-hidden');
+                }
+            }
+            lastScrollY = scrollY;
+            
+            // Scroll the hero splines (which contain the text) up naturally with the page and fade them out
+            if (heroDark) {
+                heroDark.style.transform = `translateY(-${scrollY}px)`;
+                heroDark.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
+            }
+            if (heroLight) {
+                heroLight.style.transform = `translateY(-${scrollY}px)`;
+                heroLight.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
+            }
+            
+            if (timeline) {
+                // Disappear if scrolled down more than 65% of viewport height
+                if (scrollY > window.innerHeight * 0.65) {
+                    timeline.classList.add('hide-timeline');
+                } else {
+                    timeline.classList.remove('hide-timeline');
+                }
+            }
+        });
+
         // ── Scroll Reveal — auto-unobserve after activation ──
         const revealObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
@@ -280,11 +316,6 @@
 
                 const services = document.getElementById('services');
                 if (services) {
-                    // Temporarily disable scroll snap for a smoother manual scroll if behavior: smooth is clashing
-                    const html = document.documentElement;
-                    const originalSnap = html.style.scrollSnapType;
-                    html.style.scrollSnapType = 'none';
-
                     const headerOffset = 100;
                     const elementPosition = services.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -294,9 +325,7 @@
                         behavior: 'smooth'
                     });
 
-                    // Restore scroll snap after transition
                     setTimeout(() => {
-                        html.style.scrollSnapType = originalSnap;
                         exploreTarget.classList.remove('clicking');
                         isTransitioning = false;
                     }, 1000);
