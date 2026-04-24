@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useCallback, useRef, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type LegacyPageFrameProps = {
   src: string;
@@ -10,6 +10,7 @@ type LegacyPageFrameProps = {
 
 export function LegacyPageFrame({ src, title }: LegacyPageFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const clickCleanupRef = useRef<(() => void) | null>(null);
   const [iframeSrc, setIframeSrc] = useState(() =>
     typeof window !== "undefined" ? src + window.location.hash : src,
   );
@@ -17,21 +18,45 @@ export function LegacyPageFrame({ src, title }: LegacyPageFrameProps) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Forward magic link tokens or hash routing from Next.js parent to the iframe.
+    // Keep same-origin iframe hash routing in sync without forcing a full reload.
     const syncIframeSrc = () => {
-      setIframeSrc(src + window.location.hash);
+      const nextHash = window.location.hash;
+      const iframeWindow = iframeRef.current?.contentWindow;
+      const currentHash = iframeWindow?.location.hash;
+
+      if (iframeWindow && currentHash !== nextHash) {
+        iframeWindow.location.hash = nextHash;
+        return;
+      }
+
+      setIframeSrc((current) => {
+        const nextSrc = src + nextHash;
+        return current === nextSrc ? current : nextSrc;
+      });
     };
 
     syncIframeSrc();
     window.addEventListener("hashchange", syncIframeSrc);
-    return () => window.removeEventListener("hashchange", syncIframeSrc);
+
+    return () => {
+      window.removeEventListener("hashchange", syncIframeSrc);
+    };
   }, [src]);
+
+  useEffect(() => {
+    return () => {
+      clickCleanupRef.current?.();
+    };
+  }, []);
 
   const onLoad = useCallback(() => {
     // Only possible for same-origin `public/` assets.
     const win = iframeRef.current?.contentWindow;
     const doc = iframeRef.current?.contentDocument ?? win?.document;
     if (!doc) return;
+
+    clickCleanupRef.current?.();
+    clickCleanupRef.current = null;
 
     // Home page: make the "Explore Now" hit-target scroll to Services.
     if (src.endsWith("/klyperix.html")) {
@@ -44,8 +69,10 @@ export function LegacyPageFrame({ src, title }: LegacyPageFrameProps) {
         };
 
         // Avoid stacking duplicate handlers on hot reload.
-        target.removeEventListener("click", handler);
         target.addEventListener("click", handler, { passive: false });
+        clickCleanupRef.current = () => {
+          target.removeEventListener("click", handler);
+        };
       }
     }
   }, [src]);
@@ -61,7 +88,7 @@ export function LegacyPageFrame({ src, title }: LegacyPageFrameProps) {
         title={title}
         src={iframeSrc}
         className="h-[100dvh] min-h-[100dvh] w-full border-0"
-        loading="lazy"
+        loading="eager"
         referrerPolicy="no-referrer-when-downgrade"
         ref={iframeRef}
         onLoad={onLoad}

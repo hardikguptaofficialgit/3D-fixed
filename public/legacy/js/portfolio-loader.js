@@ -5,6 +5,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 (function() {
+    if (window.__klyperixPortfolioLoaderInitialized) return;
+    window.__klyperixPortfolioLoaderInitialized = true;
+
     const sb = typeof getSupabaseClient === 'function' ? getSupabaseClient() : null;
     if (!sb) { console.warn('[Portfolio Loader] Supabase not available'); return; }
 
@@ -45,7 +48,7 @@
                 <video 
                     src="${url}" 
                     loop muted playsinline 
-                    preload="auto" 
+                    preload="metadata" 
                     controlsList="nodownload nofullscreen noremoteplayback" 
                     disablePictureInPicture
                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;transition:all 0.5s cubic-bezier(0.2, 1, 0.2, 1);"
@@ -63,6 +66,7 @@
                     src="${url}" 
                     alt="${item.title || ''}" 
                     loading="lazy" 
+                    decoding="async"
                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;transition:all 0.5s cubic-bezier(0.2, 1, 0.2, 1);"
                 >
             </div>`;
@@ -228,6 +232,7 @@
                 const html = items.map(item => buildItem(item, classes.item, classes.ratio)).join('');
                 if (track.classList.contains('marquee-track')) {
                     track.innerHTML = html + html; // Double for seamless loop
+                    track.dataset.klypCloned = 'true';
                 } else {
                     track.innerHTML = html;
                 }

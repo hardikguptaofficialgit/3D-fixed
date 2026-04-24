@@ -3,6 +3,11 @@
  * Handles Theme Sync, Marquee cloning, and Video interactions.
  */
 
+if (window.__klyperixServicePremiumInitialized) {
+    console.warn('[Klyperix] service-premium.js already initialized.');
+} else {
+    window.__klyperixServicePremiumInitialized = true;
+
 document.addEventListener('DOMContentLoaded', () => {
     initThemeControl();
     initMarqueeCloning();
@@ -52,6 +57,7 @@ function initThemeControl() {
  */
 function initMarqueeCloning() {
     document.querySelectorAll('.marquee-track').forEach(track => {
+        if (track.dataset.klypCloned === 'true') return;
         const items = Array.from(track.children);
         if (items.length === 0) return;
 
@@ -69,6 +75,8 @@ function initMarqueeCloning() {
                 track.appendChild(clone);
             });
         }
+
+        track.dataset.klypCloned = 'true';
     });
 }
 
@@ -76,31 +84,77 @@ function initMarqueeCloning() {
  * Hover-to-Play logic for video containers
  */
 function initVideoInteractions() {
-    const videoContainers = document.querySelectorAll('.media-card');
-    
-    videoContainers.forEach(container => {
+    const preparedVideos = new WeakSet();
+    let activeVideo = null;
+
+    function prepareVideo(video) {
+        if (!video || preparedVideos.has(video)) return;
+        video.muted = true;
+        video.playsInline = true;
+        if (!video.preload) video.preload = 'metadata';
+        preparedVideos.add(video);
+    }
+
+    function pauseVideo(video) {
+        if (!video || video.paused) return;
+        video.pause();
+        if (activeVideo === video) activeVideo = null;
+    }
+
+    document.querySelectorAll('.media-card video').forEach(prepareVideo);
+
+    document.addEventListener('mouseover', (event) => {
+        const container = event.target.closest('.media-card');
+        if (!container) return;
+
         const video = container.querySelector('video');
         if (!video) return;
 
-        video.muted = true;
-        video.playsInline = true;
+        prepareVideo(video);
 
-        container.addEventListener('mouseenter', () => {
-            if (!video.paused) return;
+        if (activeVideo && activeVideo !== video) {
+            pauseVideo(activeVideo);
+        }
 
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    // Auto-play was prevented
-                    console.log("Playback prevented:", error);
-                });
-            }
+        if (!video.paused) {
+            activeVideo = video;
+            return;
+        }
+
+        const playPromise = video.play();
+        activeVideo = video;
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Playback prevented:", error);
+            });
+        }
+    }, { passive: true });
+
+    document.addEventListener('mouseout', (event) => {
+        const container = event.target.closest('.media-card');
+        if (!container) return;
+
+        const relatedTarget = event.relatedTarget;
+        if (relatedTarget instanceof Node && container.contains(relatedTarget)) return;
+
+        pauseVideo(container.querySelector('video'));
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) return;
+        document.querySelectorAll('.media-card video').forEach(pauseVideo);
+    });
+
+    const visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            const video = entry.target;
+            prepareVideo(video);
+            if (!entry.isIntersecting) pauseVideo(video);
         });
+    }, { threshold: 0.05 });
 
-        container.addEventListener('mouseleave', () => {
-            if (video.paused) return;
-            video.pause();
-        });
+    document.querySelectorAll('.media-card video').forEach((video) => {
+        visibilityObserver.observe(video);
     });
 }
 
@@ -158,6 +212,7 @@ function initCinemaFocus() {
 
     const overlay = document.getElementById('cinemaOverlay');
     const content = document.getElementById('cinemaContent');
+    if (!overlay || !content || typeof gsap === 'undefined') return;
     
     let currentGallery = [];
     let currentIndex = 0;
@@ -348,4 +403,6 @@ function initCinemaFocus() {
         if (e.key === 'ArrowRight') navigateFocus(1);
         if (e.key === 'ArrowLeft') navigateFocus(-1);
     });
+}
+
 }

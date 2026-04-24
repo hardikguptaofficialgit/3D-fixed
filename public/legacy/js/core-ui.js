@@ -9,6 +9,9 @@
  * 5. Transform calculations are only applied to the actively visible Spline instance.
  */
 (function () {
+    if (window.__klyperixCoreUiInitialized) return;
+    window.__klyperixCoreUiInitialized = true;
+
     // ==========================================================
     // GPU PERFORMANCE: Spline Visibility Lifecycle Manager
     // ==========================================================
@@ -34,6 +37,8 @@
     let allSplines = [];
     let currentScene = 'hero';
     let sceneDebounceTimer = null;
+    let lastAppliedHeroTransform = '';
+    let lastAppliedHeroOpacity = '';
     
     // Cache viewport height to avoid layout thrashing on scroll
     let viewportHeight = window.innerHeight;
@@ -118,6 +123,12 @@
         });
     }
 
+    function getActiveHeroSpline() {
+        if (heroSplineDark && heroSplineDark.classList.contains('active')) return heroSplineDark;
+        if (heroSplineLight && heroSplineLight.classList.contains('active')) return heroSplineLight;
+        return null;
+    }
+
     function switchScene(scene) {
         if (scene === currentScene) return;
         currentScene = scene;
@@ -182,17 +193,18 @@
 
     function initUI() {
         // Flip Card Click Toggle
-        document.querySelectorAll('.flip-card').forEach(card => {
-            card.addEventListener('click', (e) => {
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.flip-card');
+
+            if (card) {
                 e.stopPropagation();
                 document.querySelectorAll('.flip-card.flipped').forEach(c => {
                     if (c !== card) c.classList.remove('flipped');
                 });
                 card.classList.toggle('flipped');
-            });
-        });
+                return;
+            }
 
-        document.addEventListener('click', () => {
             document.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
         });
 
@@ -219,28 +231,31 @@
             
             // Scroll and fade active hero spline
             const threshold = viewportHeight * 0.5;
+            const activeHeroSpline = getActiveHeroSpline();
             if (scrollY <= threshold) {
-                const opacityVal = 1 - (scrollY / threshold);
-                const transformVal = `translateY(-${scrollY}px)`;
+                const opacityVal = String(1 - (scrollY / threshold));
+                const transformVal = `translate3d(0, -${scrollY}px, 0)`;
 
-                if (heroSplineDark && heroSplineDark.classList.contains('active')) {
-                    heroSplineDark.style.transform = transformVal;
-                    heroSplineDark.style.opacity = opacityVal;
-                } else if (heroSplineLight && heroSplineLight.classList.contains('active')) {
-                    heroSplineLight.style.transform = transformVal;
-                    heroSplineLight.style.opacity = opacityVal;
+                if (activeHeroSpline && lastAppliedHeroTransform !== transformVal) {
+                    activeHeroSpline.style.transform = transformVal;
+                    lastAppliedHeroTransform = transformVal;
+                }
+                if (activeHeroSpline && lastAppliedHeroOpacity !== opacityVal) {
+                    activeHeroSpline.style.opacity = opacityVal;
+                    lastAppliedHeroOpacity = opacityVal;
                 }
                 heroHidden = false;
             } else if (!heroHidden) {
                 // Apply final hidden state exactly once
-                const finalTransform = `translateY(-${threshold}px)`;
-                if (heroSplineDark) {
-                    heroSplineDark.style.transform = finalTransform;
-                    heroSplineDark.style.opacity = 0;
-                }
-                if (heroSplineLight) {
-                    heroSplineLight.style.transform = finalTransform;
-                    heroSplineLight.style.opacity = 0;
+                const finalTransform = `translate3d(0, -${threshold}px, 0)`;
+                [heroSplineDark, heroSplineLight].forEach((spline) => {
+                    if (!spline) return;
+                    spline.style.transform = finalTransform;
+                    spline.style.opacity = 0;
+                });
+                if (activeHeroSpline) {
+                    lastAppliedHeroTransform = finalTransform;
+                    lastAppliedHeroOpacity = '0';
                 }
                 heroHidden = true;
             }
@@ -263,6 +278,18 @@
                 isTicking = true;
             }
         }, { passive: true }); // passive flag improves scroll performance significantly
+        window.addEventListener('resize', () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(onScrollUpdate);
+                isTicking = true;
+            }
+        }, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !isTicking) {
+                window.requestAnimationFrame(onScrollUpdate);
+                isTicking = true;
+            }
+        });
 
         // Scroll Reveal 
         const revealObserver = new IntersectionObserver(entries => {
@@ -358,6 +385,8 @@
                 }
             });
         }
+
+        onScrollUpdate();
     }
 
     // Initialize everything
