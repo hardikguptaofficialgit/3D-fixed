@@ -2723,7 +2723,7 @@
                             </div>
                         </div>
                         <div class="preview-frame-wrap" style="height:380px;">
-                            <iframe id="designPreviewIframe" src="klyperix.html"
+                            <iframe id="designPreviewIframe" src="klyperix.html" loading="lazy"
                                 sandbox="allow-scripts allow-same-origin"
                                 style="transform:scale(0.36);transform-origin:top left;width:1440px;height:1060px;border:none;pointer-events:none;"></iframe>
                         </div>
@@ -2746,7 +2746,7 @@
                         <div class="compare-box">
                             <div class="compare-box-header before">● Before — Saved State</div>
                             <div style="height:200px;overflow:hidden;position:relative;">
-                                <iframe id="compareBeforeIframe" src="klyperix.html"
+                                <iframe id="compareBeforeIframe" src="klyperix.html" loading="lazy"
                                     sandbox="allow-scripts allow-same-origin"
                                     style="transform:scale(0.3);transform-origin:top left;width:1440px;height:900px;border:none;pointer-events:none;"></iframe>
                             </div>
@@ -2754,7 +2754,7 @@
                         <div class="compare-box">
                             <div class="compare-box-header after">● After — Current Preview</div>
                             <div style="height:200px;overflow:hidden;position:relative;">
-                                <iframe id="compareAfterIframe" src="klyperix.html"
+                                <iframe id="compareAfterIframe" src="klyperix.html" loading="lazy"
                                     sandbox="allow-scripts allow-same-origin"
                                     style="transform:scale(0.3);transform-origin:top left;width:1440px;height:900px;border:none;pointer-events:none;"></iframe>
                             </div>
@@ -2818,14 +2818,14 @@
                 <div class="compare-box">
                     <div class="compare-box-header before">● Before — Saved State</div>
                     <div style="height:240px;overflow:hidden;position:relative;">
-                        <iframe id="compareBeforeIframe" src="klyperix.html" sandbox="allow-scripts allow-same-origin"
+                        <iframe id="compareBeforeIframe" src="klyperix.html" loading="lazy" sandbox="allow-scripts allow-same-origin"
                             style="transform:scale(0.35);transform-origin:top left;width:1440px;height:900px;border:none;pointer-events:none;"></iframe>
                     </div>
                 </div>
                 <div class="compare-box">
                     <div class="compare-box-header after">● After — Current Preview</div>
                     <div style="height:240px;overflow:hidden;position:relative;">
-                        <iframe id="compareAfterIframe" src="klyperix.html" sandbox="allow-scripts allow-same-origin"
+                        <iframe id="compareAfterIframe" src="klyperix.html" loading="lazy" sandbox="allow-scripts allow-same-origin"
                             style="transform:scale(0.35);transform-origin:top left;width:1440px;height:900px;border:none;pointer-events:none;"></iframe>
                     </div>
                 </div>
@@ -3913,7 +3913,7 @@
                         </div>
                     </div>
                     <div class="section-preview-frame">
-                        <iframe data-section-iframe="${s.id}" src="klyperix.html${s.hash}" sandbox="allow-scripts allow-same-origin"></iframe>
+                        <iframe data-section-iframe="${s.id}" src="klyperix.html${s.hash}" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
                     </div>
                     <div class="section-preview-footer">${s.desc}</div>
                 </div>

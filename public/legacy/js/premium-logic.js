@@ -53,6 +53,9 @@ function initThemeManager() {
  * Hover-to-Play logic for video thumbnails (Using Event Delegation)
  */
 function initHoverToPlay() {
+    let activeWrapper = null;
+    let activeVideo = null;
+
     // Prep all existing videos on load for autoplay compliance
     document.querySelectorAll('.media-wrapper video').forEach(video => {
         video.muted = true;
@@ -61,24 +64,33 @@ function initHoverToPlay() {
 
     document.addEventListener('mouseover', (e) => {
         const wrapper = e.target.closest('.media-wrapper');
-        if (wrapper) {
-            const video = wrapper.querySelector('video');
-            if (video) {
-                video.play().catch(err => console.warn('[Klyperix] Autoplay prevented:', err));
-            }
+        if (!wrapper || wrapper === activeWrapper) return;
+
+        const video = wrapper.querySelector('video');
+        if (!video) return;
+
+        if (activeVideo && activeVideo !== video) {
+            activeVideo.pause();
+            activeVideo.currentTime = 0;
         }
+
+        activeWrapper = wrapper;
+        activeVideo = video;
+        video.play().catch(err => console.warn('[Klyperix] Autoplay prevented:', err));
     });
 
     document.addEventListener('mouseout', (e) => {
         const wrapper = e.target.closest('.media-wrapper');
         // Ensure we actually leave the wrapper entirely
-        if (wrapper && !wrapper.contains(e.relatedTarget)) {
-            const video = wrapper.querySelector('video');
-            if (video) {
-                video.pause();
-                video.currentTime = 0; // Reset to start
-            }
+        if (!wrapper || wrapper !== activeWrapper || wrapper.contains(e.relatedTarget)) return;
+
+        if (activeVideo) {
+            activeVideo.pause();
+            activeVideo.currentTime = 0; // Reset to start
         }
+
+        activeWrapper = null;
+        activeVideo = null;
     });
 }
 

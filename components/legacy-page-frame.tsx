@@ -10,19 +10,21 @@ type LegacyPageFrameProps = {
 
 export function LegacyPageFrame({ src, title }: LegacyPageFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const [iframeSrc, setIframeSrc] = useState(src);
+  const [iframeSrc, setIframeSrc] = useState(() =>
+    typeof window !== "undefined" ? src + window.location.hash : src,
+  );
 
   useEffect(() => {
-    // Forward magic link tokens or hash routing from Next.js parent to the iframe
-    if (typeof window !== "undefined") {
+    if (typeof window === "undefined") return;
+
+    // Forward magic link tokens or hash routing from Next.js parent to the iframe.
+    const syncIframeSrc = () => {
       setIframeSrc(src + window.location.hash);
-      
-      const handleHashChange = () => {
-        setIframeSrc(src + window.location.hash);
-      };
-      window.addEventListener("hashchange", handleHashChange);
-      return () => window.removeEventListener("hashchange", handleHashChange);
-    }
+    };
+
+    syncIframeSrc();
+    window.addEventListener("hashchange", syncIframeSrc);
+    return () => window.removeEventListener("hashchange", syncIframeSrc);
   }, [src]);
 
   const onLoad = useCallback(() => {

@@ -772,9 +772,15 @@ window.__klypSupabaseReady = initSupabaseConfig();
         const heroLight = document.getElementById('hero-spline-light');
         const header = document.getElementById('dynamic-island');
         let lastScrollY = window.scrollY;
+        let latestScrollY = window.scrollY;
+        let viewportHeight = window.innerHeight;
+        let scrollTicking = false;
 
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
+        function applyScrollEffects() {
+            scrollTicking = false;
+            const scrollY = latestScrollY;
+            const heroOpacity = Math.max(0, 1 - (scrollY / (viewportHeight * 0.5)));
+            const heroTransform = `translate3d(0, -${scrollY}px, 0)`;
 
             // Dynamic Island Auto-hide on Scroll Down, Show on Scroll Up
             if (header) {
@@ -788,23 +794,40 @@ window.__klypSupabaseReady = initSupabaseConfig();
 
             // Scroll the hero splines (which contain the text) up naturally with the page and fade them out
             if (heroDark) {
-                heroDark.style.transform = `translateY(-${scrollY}px)`;
-                heroDark.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
+                heroDark.style.transform = heroTransform;
+                heroDark.style.opacity = heroOpacity;
             }
             if (heroLight) {
-                heroLight.style.transform = `translateY(-${scrollY}px)`;
-                heroLight.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
+                heroLight.style.transform = heroTransform;
+                heroLight.style.opacity = heroOpacity;
             }
 
             if (timeline) {
-                // Disappear if scrolled down more than 65% of viewport height
-                if (scrollY > window.innerHeight * 1.00) {
+                // Disappear if scrolled down more than one viewport height
+                if (scrollY > viewportHeight) {
                     timeline.classList.add('hide-timeline');
                 } else {
                     timeline.classList.remove('hide-timeline');
                 }
             }
+        }
+
+        function queueScrollEffects() {
+            latestScrollY = window.scrollY;
+            if (scrollTicking) return;
+            scrollTicking = true;
+            requestAnimationFrame(applyScrollEffects);
+        }
+
+        window.addEventListener('scroll', queueScrollEffects, { passive: true });
+        window.addEventListener('resize', () => {
+            viewportHeight = window.innerHeight;
+            queueScrollEffects();
+        }, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) queueScrollEffects();
         });
+        applyScrollEffects();
 
         // ── Scroll Reveal — auto-unobserve after activation ──
         const revealObserver = new IntersectionObserver(entries => {
