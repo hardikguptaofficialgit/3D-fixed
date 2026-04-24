@@ -1,21 +1,19 @@
 /**
- * Core UI & Spline Management for Klyperix (v3 — Performance Optimized)
+ * Core UI & Spline Management for Klyperix (v3 - Performance Optimized)
  *
- * OPTIMIZATIONS APPLIED:
- * 1. Inactive spline viewers set to display:none → fully stops WebGL GPU rendering
- *    Only 1 viewer renders at any time (was 4 active WebGL contexts before)
- * 2. MutationObserver for permanent watermark removal (removes #logo element once)
- *    Replaces the old setInterval(1000) that polled every second forever
- * 3. Reveal elements auto-unobserved after activation (no wasted re-checking)
- * 4. getComputedStyle() removed from scroll observer (was forcing synchronous layout)
- * 5. Scene switching debounced at 150ms to prevent rapid toggling during fast scroll
- * 6. Theme toggle applies Spline switch instantly via klyperixThemeChanged event
+ * NEW OPTIMIZATIONS APPLIED:
+ * 1. requestAnimationFrame (rAF) used for all scroll-bound animations.
+ * 2. { passive: true } added to scroll listeners to unblock the scrolling thread.
+ * 3. Viewport height cached and bound to resize events to prevent layout thrashing.
+ * 4. State flags (heroHidden) prevent redundant DOM style updates once elements are invisible.
+ * 5. Transform calculations are only applied to the actively visible Spline instance.
  */
 (function () {
-    // ══════════════════════════════════════════════════════════
+    // ==========================================================
     // GPU PERFORMANCE: Spline Visibility Lifecycle Manager
-    // ══════════════════════════════════════════════════════════
-    // ── Global Safeguard: Block Spline's internal LinkedIn links ──
+    // ==========================================================
+    
+    // Global Safeguard: Block Spline's internal LinkedIn links
     const originalOpen = window.open;
     window.open = function(url, target, features) {
         if (url && url.toLowerCase().includes('linkedin') && document.body.classList.contains('hero-active')) {
@@ -24,7 +22,7 @@
             if (services) {
                 services.scrollIntoView({ behavior: 'smooth' });
             }
-            return null; // Block the original redirect
+            return null; 
         }
         return originalOpen.apply(this, arguments);
     };
@@ -36,6 +34,12 @@
     let allSplines = [];
     let currentScene = 'hero';
     let sceneDebounceTimer = null;
+    
+    // Cache viewport height to avoid layout thrashing on scroll
+    let viewportHeight = window.innerHeight;
+    window.addEventListener('resize', () => {
+        viewportHeight = window.innerHeight;
+    }, { passive: true });
 
     function isLowEnd() {
         const cores = navigator.hardwareConcurrency || 2;
@@ -56,8 +60,7 @@
 
     const lowEnd = isLowEnd();
 
-    // ── Permanent watermark removal via MutationObserver ──
-    // Replaces setInterval(1000) polling — fires once per viewer, then disconnects
+    // Permanent watermark removal via MutationObserver
     function removeWatermarkPermanently(viewer) {
         if (!viewer) return;
 
@@ -65,7 +68,7 @@
             if (!viewer.shadowRoot) return false;
             const logo = viewer.shadowRoot.querySelector('#logo');
             if (logo) {
-                logo.remove(); // Permanently remove, not just hide
+                logo.remove(); 
                 return true;
             }
             return false;
@@ -95,22 +98,22 @@
         }
     }
 
-    // ── Activate exactly 1 spline viewer, display:none the rest ──
-    // display:none fully stops WebGL rendering = zero GPU cost for inactive viewers
+    // Activate exactly 1 spline viewer, display:none the rest
     function updateActiveSpline() {
         if (lowEnd) return;
         const isLight = document.body.classList.contains('light-theme');
 
-        // Keep both hero and bg splines active for the current theme.
-        // The hero spline will physically scroll up via translateY, smoothly revealing the bg spline underneath!
         allSplines.forEach(s => {
             const isTargetTheme = isLight ? s.id.includes('-light') : s.id.includes('-dark');
             if (isTargetTheme) {
                 s.style.display = '';
                 s.classList.add('active');
+                // Hint to browser that these will animate
+                s.style.willChange = 'transform, opacity'; 
             } else {
                 s.classList.remove('active');
                 s.style.display = 'none';
+                s.style.willChange = 'auto';
             }
         });
     }
@@ -125,14 +128,13 @@
             fb.className = 'spline-fallback ' + (scene === 'hero' ? 'hero-fallback' : 'bg-fallback');
             mount.appendChild(fb);
         } else {
-            // Debounce rapid scene switching during fast scrolling
             clearTimeout(sceneDebounceTimer);
             sceneDebounceTimer = setTimeout(updateActiveSpline, 150);
         }
     }
 
     function dismissLoader() {
-        // Function preserved for compatibility but logic removed as loader is deleted
+        // Preserved for compatibility
     }
 
     function initSpline() {
@@ -142,7 +144,7 @@
             fb.className = 'spline-fallback hero-fallback';
             mount.appendChild(fb);
             currentScene = 'hero';
-            if (!usesVideoIntroLoader()) dismissLoader();
+            if (typeof usesVideoIntroLoader !== 'undefined' && !usesVideoIntroLoader()) dismissLoader();
 
             mount.addEventListener('click', (e) => {
                 if (document.body.classList.contains('hero-active')) {
@@ -156,27 +158,22 @@
             bgSplineLight = document.getElementById('bg-spline-light');
             allSplines = [heroSplineDark, heroSplineLight, bgSplineDark, bgSplineLight].filter(Boolean);
 
-            // Set initial active state — 1 viewer renders, 3 are display:none
             updateActiveSpline();
-
-            // Setup permanent watermark removal for all viewers
             allSplines.forEach(removeWatermarkPermanently);
 
-            // Immediate visibility for non-mobile
             if (true) {
                 dismissLoader();
             }
         }
 
-        // Listen for theme changes — switch active spline variant instantly
         window.addEventListener('klyperixThemeChanged', () => {
             if (!lowEnd) updateActiveSpline();
         });
     }
 
-    // ══════════════════════════════════════════════════════════
+    // ==========================================================
     // TRANSITIONS & NAVIGATION
-    // ══════════════════════════════════════════════════════════
+    // ==========================================================
     function triggerPremiumTransition() {
         const targetSection = document.getElementById('services');
         if (!targetSection) return;
@@ -184,7 +181,7 @@
     }
 
     function initUI() {
-        // ── Flip Card Click Toggle ──
+        // Flip Card Click Toggle
         document.querySelectorAll('.flip-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -199,17 +196,18 @@
             document.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
         });
 
-        // ── Timeline & Hero Spline Visibility on Scroll ──
+        // Timeline & Hero Spline Visibility on Scroll (Optimized with rAF)
         const timeline = document.getElementById('cinematicTimeline');
-        const heroDark = document.getElementById('hero-spline-dark');
-        const heroLight = document.getElementById('hero-spline-light');
         const header = document.getElementById('dynamic-island');
         let lastScrollY = window.scrollY;
+        
+        let isTicking = false;
+        let heroHidden = false; // State flag to prevent redundant styling
 
-        window.addEventListener('scroll', () => {
+        function onScrollUpdate() {
             const scrollY = window.scrollY;
             
-            // Dynamic Island Auto-hide on Scroll Down, Show on Scroll Up
+            // Dynamic Island Auto-hide
             if (header) {
                 if (scrollY > 150 && scrollY > lastScrollY) {
                     header.classList.add('nav-hidden');
@@ -219,27 +217,54 @@
             }
             lastScrollY = scrollY;
             
-            // Scroll the hero splines (which contain the text) up naturally with the page and fade them out
-            if (heroDark) {
-                heroDark.style.transform = `translateY(-${scrollY}px)`;
-                heroDark.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
-            }
-            if (heroLight) {
-                heroLight.style.transform = `translateY(-${scrollY}px)`;
-                heroLight.style.opacity = Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)));
+            // Scroll and fade active hero spline
+            const threshold = viewportHeight * 0.5;
+            if (scrollY <= threshold) {
+                const opacityVal = 1 - (scrollY / threshold);
+                const transformVal = `translateY(-${scrollY}px)`;
+
+                if (heroSplineDark && heroSplineDark.classList.contains('active')) {
+                    heroSplineDark.style.transform = transformVal;
+                    heroSplineDark.style.opacity = opacityVal;
+                } else if (heroSplineLight && heroSplineLight.classList.contains('active')) {
+                    heroSplineLight.style.transform = transformVal;
+                    heroSplineLight.style.opacity = opacityVal;
+                }
+                heroHidden = false;
+            } else if (!heroHidden) {
+                // Apply final hidden state exactly once
+                const finalTransform = `translateY(-${threshold}px)`;
+                if (heroSplineDark) {
+                    heroSplineDark.style.transform = finalTransform;
+                    heroSplineDark.style.opacity = 0;
+                }
+                if (heroSplineLight) {
+                    heroSplineLight.style.transform = finalTransform;
+                    heroSplineLight.style.opacity = 0;
+                }
+                heroHidden = true;
             }
             
+            // Timeline visibility
             if (timeline) {
-                // Disappear if scrolled down more than 65% of viewport height
-                if (scrollY > window.innerHeight * 0.65) {
+                if (scrollY > viewportHeight * 0.65) {
                     timeline.classList.add('hide-timeline');
                 } else {
                     timeline.classList.remove('hide-timeline');
                 }
             }
-        });
+            
+            isTicking = false;
+        }
 
-        // ── Scroll Reveal — auto-unobserve after activation ──
+        window.addEventListener('scroll', () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(onScrollUpdate);
+                isTicking = true;
+            }
+        }, { passive: true }); // passive flag improves scroll performance significantly
+
+        // Scroll Reveal 
         const revealObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
@@ -250,7 +275,7 @@
         }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
 
-        // ── Dynamic Island Nav Tracking ──
+        // Dynamic Island Nav Tracking 
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
 
@@ -272,7 +297,7 @@
         }, { root: null, rootMargin: '-30% 0px -30% 0px', threshold: 0 });
         sections.forEach(sec => scrollObserver.observe(sec));
 
-        // ── Nav Pill Proximity Hover ──
+        // Nav Pill Proximity Hover 
         const backdrop = document.querySelector('.hover-backdrop');
         const navContainer = document.querySelector('.nav-pill');
         if (navContainer && backdrop) {
@@ -290,16 +315,13 @@
             });
         }
 
-        // ── Explore Now Interaction Layer ──
+        // Explore Now Interaction Layer 
         const exploreTarget = document.getElementById('spline-explore-target');
         if (exploreTarget) {
             let isTransitioning = false;
             
-            // Safety: Block ANY external redirection to LinkedIn if it originated near this area
             window.addEventListener('beforeunload', (e) => {
                 if (isTransitioning) {
-                    // This is a brutal but effective way to stop unexpected redirects
-                    // during our smooth scroll transition.
                     console.log("[Safety] Blocking unexpected redirect while transitioning");
                 }
             });
@@ -318,7 +340,8 @@
                 if (services) {
                     const headerOffset = 100;
                     const elementPosition = services.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    // Updated to use modern window.scrollY
+                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
                     window.scrollTo({
                         top: offsetPosition,

@@ -1,20 +1,24 @@
 /**
  * KLYPERIX - Thematic UI Animations
  * Intercepts existing pages and overrides scrolling logic based on UI modes.
+ * * OPTIMIZATIONS:
+ * 1. force3D: true added to offload complex animations to the GPU.
+ * 2. gsap.utils.toArray() used for faster, native DOM array conversion.
+ * 3. Scoped queries and null checks added to prevent silent errors.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
     // Only proceed if GSAP is available
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        console.warn("[Klyperix] GSAP or ScrollTrigger missing.");
+        return;
+    }
     
     gsap.registerPlugin(ScrollTrigger);
 
     const is3DMode = document.body.classList.contains('ui-3d-mode');
     const is2DMode = document.body.classList.contains('ui-2d-mode');
 
-    // Remove existing simple reveals from service-premium to apply custom triggers
-    const panels = document.querySelectorAll('.glass-panel');
-    
     if (is3DMode) {
         init3DScroll();
     } else if (is2DMode) {
@@ -25,17 +29,18 @@ document.addEventListener("DOMContentLoaded", () => {
 function init3DScroll() {
     console.log("[Klyperix] Initializing 3D Volumetric Scroll Engine");
     
+    const panels = gsap.utils.toArray('.glass-panel');
+    if (!panels.length) return;
+
     // Set 3D perspective on all panels initially
-    gsap.set('.glass-panel', {
+    gsap.set(panels, {
         transformPerspective: 1500,
         transformStyle: "preserve-3d"
     });
-
-    const panels = document.querySelectorAll('.glass-panel');
     
     panels.forEach((panel, i) => {
-        // Create an organic floating effect for the cards within
-        const cards = panel.querySelectorAll('.carousel-item');
+        // Scoped, optimized query for cards within this specific panel
+        const cards = gsap.utils.toArray('.carousel-item', panel);
         
         gsap.fromTo(panel, 
             { 
@@ -51,11 +56,12 @@ function init3DScroll() {
                 y: 0,
                 duration: 1.5,
                 ease: "power3.out",
+                force3D: true,  // Hardware acceleration
                 scrollTrigger: {
                     trigger: panel,
                     start: "top 85%",
                     end: "top 50%",
-                    scrub: 1 // Link animation to scroll bar for true 3D parallax
+                    scrub: 1    // Link animation to scroll bar for true 3D parallax
                 }
             }
         );
@@ -67,6 +73,7 @@ function init3DScroll() {
                 y: -30,
                 rotationY: (index) => index % 2 === 0 ? -5 : 5, // Slight alternating twist
                 stagger: 0.1,
+                force3D: true,
                 scrollTrigger: {
                     trigger: panel,
                     start: "top 70%",
@@ -77,17 +84,21 @@ function init3DScroll() {
         }
     });
 
-    // Animate header title in 3D
-    gsap.fromTo(".page-title", 
-        { opacity: 0, z: -300, rotationX: -20, scale: 0.8 },
-        { opacity: 1, z: 0, rotationX: 0, scale: 1, duration: 2, ease: "expo.out" }
-    );
+    // Animate header title in 3D safely
+    const pageTitle = document.querySelector(".page-title");
+    if (pageTitle) {
+        gsap.fromTo(pageTitle, 
+            { opacity: 0, z: -300, rotationX: -20, scale: 0.8 },
+            { opacity: 1, z: 0, rotationX: 0, scale: 1, duration: 2, ease: "expo.out", force3D: true }
+        );
+    }
 }
 
 function init2DScroll() {
     console.log("[Klyperix] Initializing 2D Vector Scroll Engine");
     
-    const panels = document.querySelectorAll('.glass-panel');
+    const panels = gsap.utils.toArray('.glass-panel');
+    if (!panels.length) return;
 
     panels.forEach((panel, index) => {
         // Alternate slide directions for a comic-book style reveal
@@ -103,6 +114,7 @@ function init2DScroll() {
             xPercent: 0,
             duration: 1,
             ease: "power4.out", // Sharp, fast ease for vector feel
+            force3D: true,
             scrollTrigger: {
                 trigger: panel,
                 start: "top 80%",
@@ -111,7 +123,7 @@ function init2DScroll() {
         });
 
         // Masks revealing media cards
-        const cards = panel.querySelectorAll('.media-card');
+        const cards = gsap.utils.toArray('.media-card', panel);
         if (cards.length > 0) {
             gsap.fromTo(cards, 
                 { clipPath: isEven ? "polygon(0 0, 0 0, 0 100%, 0% 100%)" : "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" },
@@ -129,9 +141,12 @@ function init2DScroll() {
         }
     });
 
-    // Sharp title reveal (typewriter + mask style)
-    gsap.fromTo(".page-title", 
-        { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", x: -20 },
-        { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", x: 0, duration: 1.5, ease: "power4.inOut" }
-    );
+    // Sharp title reveal safely
+    const pageTitle = document.querySelector(".page-title");
+    if (pageTitle) {
+        gsap.fromTo(pageTitle, 
+            { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", x: -20 },
+            { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", x: 0, duration: 1.5, ease: "power4.inOut", force3D: true }
+        );
+    }
 }
